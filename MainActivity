@@ -3,6 +3,8 @@ package edu.ncssm.krishnakumar24r.finalproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
@@ -46,7 +48,33 @@ public class MainActivity extends AppCompatActivity {
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor sensorShake = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        value = (TextView) findViewById(R.id.value);
+        SensorEventListener sensorEventListener = new SensorEventListener() {
+
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                if (sensorEvent!=null){
+                    float x_accl = sensorEvent.values[0];
+                    float y_accl = sensorEvent.values[1];
+                    float z_accl = sensorEvent.values[2];
+
+                    float floatSum = Math.abs(x_accl) + Math.abs(y_accl) + Math.abs(z_accl);
+
+                    if (floatSum > 14){
+                        textView2.setText("Yes, Shaking");
+                    }
+                    else{
+                        textView2.setText("No, NOT Shaking");
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+            }
+        };
+
+
+            value = (TextView) findViewById(R.id.value);
 
         mEditTextInput = findViewById(R.id.edit_text_input);
         mTextViewCountDown = findViewById(R.id.text_view_countdown);
